@@ -1,5 +1,5 @@
 # HACKLOC
-<img width="850" alt="Screenshot 2023-07-07 at 18 22 20" src="https://github.com/kadekedwin/hackloc/assets/71983420/8a2d8300-bef3-4ffe-b04e-772b4cdb6526">
+<img width="850" src="https://github.com/kadekedwin/hackloc/assets/71983420/013070f3-82ce-4680-bbd8-3ef1378eccd3">
 
 Hack location with hackloc
 
